@@ -749,9 +749,16 @@ abstract class AbstractProvider
      */
     public function getResourceOwner(AccessToken $token)
     {
-        $response = $this->fetchResourceOwnerDetails($token);
-
-        return $this->createResourceOwner($response, $token);
+        try {
+            $response = $this->fetchResourceOwnerDetails($token);
+            if (null !== $response) {
+                return $this->createResourceOwner($response, $token);
+            } else {
+                return false;
+            }
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 
     /**
